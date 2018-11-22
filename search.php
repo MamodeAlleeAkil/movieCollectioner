@@ -1,3 +1,19 @@
+<?php
+
+$USER= "root";
+$PASSWORD ="1234";
+$DSN ="mysql:host=localhost;dbname=movie_collectioner_db";
+try {
+   $pdo = new PDO($DSN, $USER, $PASSWORD);
+} catch (PDOException $e) {
+   die("Error ! : " . $e->getMessage());
+}
+
+
+$result = $pdo->query("SELECT * FROM movie");
+$movies = $result->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,10 +68,66 @@
 		</header>
 		<main class="main-content">
 			<div class="container">
-				<form class="form-wrapper cf">
-					<input type="text" placeholder="Search Movie here..." required>
+				<form class="form-wrapper cf" name="search" method="post">
+					<input type="text" name="search" placeholder="Search Movie here..." required>
 					<button type="submit">Search</button>
 				</form>
+
+				<!--Table-->
+				<table id="tablePreview" class="table table-striped table-hover table-bordered">
+					<!--Table head-->
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Poster</th>
+							<th>Title</th>
+							<th>Casts</th>
+							<th>Year</th>
+							<th>Category</th>
+							<th>Edit</th>
+							<th>Modify </th>
+						</tr>
+					</thead>
+					<!--Table head-->
+					<!--Table body-->
+					<tbody>
+						<?php 
+							//get the input of user
+							$searchedWord = $_POST['search'];
+							
+							//check if user has searched
+							if(isset($searchedWord) || $searchedWord != ""): 
+						?>
+
+							<?php foreach($movies as $movie): 
+								//checks if movie title contains searchedWord
+								if(strpos($movie["title"], $searchedWord) !== false):
+								
+								?>
+								<tr>
+									<th scope="row"><?php echo $movie["movie_id"]; ?></th>
+									<td><img alt="Image not availabe" title=<?php echo $movie["title"]; ?> src=<?php echo $movie["cover"]; ?>></td>
+									<td><?php echo $movie["title"]; ?></td>
+									<td>Dr. Kennebrew Beauregard, Ron Stallworth, Mr. Turrentine, Chief Bridges</td>
+									<td>2018</td>
+									<td>Comedy</td>
+									<td><a href="#">Modify</a></td>
+									<td><a href="#">Delete</a></td>
+								</tr>
+
+								<?php else:  //if no movies matched keyword?>
+									<tr>
+										<th colspan=8>No movies available</th>
+										
+									</tr>
+							<?php endif; endforeach; ?>
+
+						<?php endif; ?>
+
+					</tbody>
+					<!--Table body-->
+				</table>
+				<!--Table-->
 			</div>
 
 		</main>
