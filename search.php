@@ -71,7 +71,7 @@ $casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
 		</header>
 		<main class="main-content">
 			<div class="container">
-				<form class="form-wrapper cf" name="search" method="post">
+				<form class="form-wrapper cf" method="post">
 					<input type="text" name="search" placeholder="Search Movie here..." required>
 					<button type="submit">Search</button>
 				</form>
@@ -96,11 +96,10 @@ $casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
 					<!--Table body-->
 					<tbody>
 						<?php 
-							//get the input of user
-							$searchedWord = $_POST['search'];
-							
 							//check if user has searched
-							if(isset($searchedWord) || $searchedWord != ""): 
+							if(isset($_POST['search']) || $_POST['search'] != ""): 
+								//get the input of user
+								$searchedWord = $_POST['search'];
 						?>
 
 							<?php foreach($movies as $movie): 
