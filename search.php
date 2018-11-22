@@ -10,8 +10,11 @@ try {
 }
 
 
-$result = $pdo->query("SELECT * FROM movie");
-$movies = $result->fetchAll(PDO::FETCH_ASSOC);
+$resultMovie = $pdo->query("SELECT * FROM movie");
+$movies = $resultMovie->fetchAll(PDO::FETCH_ASSOC);
+
+$resultCast = $pdo->query("SELECT * FROM cast");
+$casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +89,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
 							<th>Category</th>
 							<th>Edit</th>
 							<th>Modify </th>
+							<th>View </th>
 						</tr>
 					</thead>
 					<!--Table head-->
@@ -101,25 +105,29 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
 
 							<?php foreach($movies as $movie): 
 								//checks if movie title contains searchedWord
-								if(strpos($movie["title"], $searchedWord) !== false):
+								if(stripos($movie["title"], $searchedWord) !== false):
 								
 								?>
 								<tr>
-									<th scope="row"><?php echo $movie["movie_id"]; ?></th>
-									<td><img alt="Image not availabe" title=<?php echo $movie["title"]; ?> src=<?php echo $movie["cover"]; ?>></td>
-									<td><?php echo $movie["title"]; ?></td>
-									<td>Dr. Kennebrew Beauregard, Ron Stallworth, Mr. Turrentine, Chief Bridges</td>
-									<td>2018</td>
-									<td>Comedy</td>
-									<td><a href="#">Modify</a></td>
-									<td><a href="#">Delete</a></td>
-								</tr>
+							<th scope="row"><?php echo $movie["movie_id"]; ?></th>
+							<td><img alt="Image not availabe" title=<?php echo $movie["title"]; ?> src=<?php echo $movie["cover"]; ?>></td>
+							<td><?php echo $movie["title"]; ?></td>
+							<td><?php 
+								foreach($casts as $cast){
+									if ( $movie["movie_id"]== $cast["movie_id"]){
+										echo $cast["cast_name"];
+									}
+								}
+								 ?></td>
+							
+							<td><?php echo $movie["year"]; ?></td>
+							<td><?php echo $movie["category_id"]; ?></td>
+							<td><a href="#">Modify</a></td>
+							<td><a href="#">Delete</a></td>
+							<td><a href="#">View</a></td>
+						</tr>
 
-								<?php else:  //if no movies matched keyword?>
-									<tr>
-										<th colspan=8>No movies available</th>
-										
-									</tr>
+								
 							<?php endif; endforeach; ?>
 
 						<?php endif; ?>

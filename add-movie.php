@@ -1,3 +1,39 @@
+<?php
+
+$USER= "root";
+$PASSWORD ="1234";
+$DSN ="mysql:host=localhost;dbname=movie_collectioner_db";
+try {
+   $pdo = new PDO($DSN, $USER, $PASSWORD);
+} catch (PDOException $e) {
+   die("Error ! : " . $e->getMessage());
+}
+
+function AddMovie(){
+	$category=$_POST["category"]; 
+	$title=$_POST["title"];
+	$year=$_POST["year"];
+	$casts=$_POST["casts"];
+	$cover=$_POST["cover"];
+	$tags=$_POST["tags"];
+	$url=$_POST["url"];
+	$trailer=$_POST["trailer"];
+	
+	$pdo->beginTransaction();
+	try {
+	   $sql1 = "INSERT INTO movie (title, year, imdb_link, trailer_link, cover, category_id) 
+	  VALUES ( ".$title.", ".$year.", ".$url.", ".$trailer.", ".$cover.", ".$category." )";
+	   $pdo->exec($sql);
+	  
+	   $pdo->commit();
+	} catch (Exception $e) {
+	   $pdo->rollBack();
+	   echo "Error: ".$e->getMessage();
+	}
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,7 +68,7 @@
 	<div id="site-content">
 		<header class="site-header">
 			<div class="container">
-				<a href="index.html" id="branding">
+				<a href="index.php" id="branding">
 					<img src="images/logo.png" alt="" class="logo">
 					<div class="logo-copy">
 						<h1 class="site-title">Super Movies</h1>
@@ -43,9 +79,9 @@
 				<div class="main-navigation">
 					<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
 					<ul class="menu">
-						<li class="menu-item"><a href="index.html">Home</a></li>
-						<li class="menu-item"><a href="search.html">Search</a></li>
-						<li class="menu-item current-menu-item"><a href="add-movie.html">Add Movie</a></li>
+						<li class="menu-item"><a href="index.php">Home</a></li>
+						<li class="menu-item"><a href="search.php">Search</a></li>
+						<li class="menu-item current-menu-item"><a href="add-movie.php">Add Movie</a></li>
 					</ul> <!-- .menu -->
 				</div> <!-- .main-navigation -->
 				<div class="mobile-navigation"></div>
@@ -54,7 +90,7 @@
 		<main class="main-content">
 			<div class="container">
 				<h1 class="site-title">Add a Movie</h1>
-				<form method="post" id="add-movie-form" class="add-movie-form" action="#" onsubmit="#">
+				<form method="post" id="add-movie-form" class="add-movie-form" >
 
 					<!-- BEGIN_ITEMS -->
 					<div class="form_table">
@@ -65,12 +101,23 @@
 							<a class="item_anchor" name="ItemAnchor0"></a>
 							<label class="question top_question" for="RESULT_RadioButton-0">Choose Category&nbsp;<b class="icon_required"
 								 style="color:#FF0000">*</b></label>
-							<select id="RESULT_RadioButton-0" name="RESULT_RadioButton-0" class="drop_down">
+							<select id="RESULT_RadioButton-0" name="category" class="drop_down">
 								<option></option>
-								<option value="Radio-0" selected="selected">Action</option>
-								<option value="Radio-1">Adventure</option>
-								<option value="Radio-2">Comedy</option>
-								<option value="Radio-3">Romance</option>
+								<option value="1" selected="selected">Comedy</option>
+								<option value="2">Romance</option>
+								<option value="3">Horror</option>
+								<option value="4">Science Fiction</option>
+								<option value="5">Action</option>
+								<option value="6">Thriller</option>
+								<option value="7">Drama</option>
+								<option value="8">Mystery</option>
+								<option value="9">Crime</option>
+								<option value="10">Animation</option>
+								<option value="11">Adventure</option>
+								<option value="12">Fantasy</option>
+								<option value="13">Comedy-Romance</option>
+								<option value="14">Action-Comedy</option>
+								<option value="15">Superhero</option>
 							</select>
 						</div>
 
@@ -78,8 +125,8 @@
 
 						<div id="q1" class="q required">
 							<a class="item_anchor" name="ItemAnchor1"></a>
-							<label class="question top_question" for="RESULT_TextField-1">Movie Title&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
-							<input type="text" name="RESULT_TextField-1" class="text_field" id="RESULT_TextField-1" placeholder="Movie Title"
+							<label class="question top_question" for="title">Movie Title&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
+							<input type="text" name="title" class="text_field" id="RESULT_TextField-1" placeholder="Movie Title"
 							 size="40" maxlength="255" value="">
 						</div>
 
@@ -87,19 +134,33 @@
 
 						<div id="q2" class="q required">
 							<a class="item_anchor" name="ItemAnchor2"></a>
-							<label class="question top_question" for="RESULT_RadioButton-2">Year of release&nbsp;<b class="icon_required"
+							<label class="question top_question" for="year">Year of release&nbsp;<b class="icon_required"
 								 style="color:#FF0000">*</b></label>
-							<select id="RESULT_RadioButton-2" name="RESULT_RadioButton-2" class="drop_down">
+							<select id="RESULT_RadioButton-2" name="year" class="drop_down">
 								<option></option>
-								<option value="Radio-0" selected="selected">2018</option>
-								<option value="Radio-1">2017</option>
-								<option value="Radio-2">2016</option>
-								<option value="Radio-3">2015</option>
-								<option value="Radio-4">2014</option>
-								<option value="Radio-5">2013</option>
-								<option value="Radio-6">2012</option>
-								<option value="Radio-7">2011</option>
-								<option value="Radio-8">2010</option>
+								<option value="2018" selected="selected">2018</option>
+								<option value="2017">2017</option>
+								<option value="2016">2016</option>
+								<option value="2015">2015</option>
+								<option value="2014">2014</option>
+								<option value="2013">2013</option>
+								<option value="2012">2012</option>
+								<option value="2011">2011</option>
+								<option value="2010">2010</option>
+								<option value="2009">2009</option>
+								<option value="2008">2008</option>
+								<option value="2007">2007</option>
+								<option value="2006">2006</option>
+								<option value="2005">2005</option>
+								<option value="2004">2004</option>
+								<option value="2003">2003</option>
+								<option value="2002">2002</option>
+								<option value="2001">2001</option>
+								<option value="2000">2000</option>
+								<option value="1999">1999</option>
+								<option value="1998">1998</option>
+								<option value="1997">1997</option>
+								<option value="1996">1996</option>
 							</select>
 						</div>
 
@@ -108,14 +169,14 @@
 						<div id="q3" class="q required">
 							<a class="item_anchor" name="ItemAnchor3"></a>
 							<label class="question top_question" for="RESULT_TextArea-3">Movie Casts&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
-							<textarea name="RESULT_TextArea-3" class="text_field" id="RESULT_TextArea-3" placeholder="Enter Casts Names"
+							<textarea name="casts" class="text_field" id="RESULT_TextArea-3" placeholder="Enter Casts Names"
 							 rows="7" cols="50"></textarea>
 						</div>
 
 						<div id="q7" class="q required highlight">
 							<a class="item_anchor" name="ItemAnchor4"></a>
 							<label class="question top_question" for="RESULT_TextField-4">Movie Cover&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
-							<input type="url" name="RESULT_TextField-4" class="text_field" id="RESULT_TextField-4" placeholder="Enter Movie Cover URL"
+							<input type="url" name="cover" class="text_field" id="RESULT_TextField-4" placeholder="Enter Movie Cover URL"
 							 size="100" maxlength="255" value="">
 						</div>
 
@@ -124,7 +185,7 @@
 						<div id="q4" class="q">
 							<a class="item_anchor" name="ItemAnchor4"></a>
 							<label class="question top_question" for="RESULT_TextArea-4">Movie Tags</label>
-							<textarea name="RESULT_TextArea-4" class="text_field" id="RESULT_TextArea-4" placeholder="Enter Movie Tags" rows="7"
+							<textarea name="tags" class="text_field" id="RESULT_TextArea-4" placeholder="Enter Movie Tags" rows="7"
 							 cols="50"></textarea>
 						</div>
 
@@ -133,7 +194,7 @@
 						<div id="q5" class="q required">
 							<a class="item_anchor" name="ItemAnchor5"></a>
 							<label class="question top_question" for="RESULT_TextField-5">Movie Url&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
-							<input type="url" name="RESULT_TextField-5" class="text_field" id="RESULT_TextField-5" placeholder="Enter Movie URL"
+							<input type="url" name="url" class="text_field" id="RESULT_TextField-5" placeholder="Enter Movie URL"
 							 size="100" maxlength="255" value="">
 						</div>
 
@@ -142,14 +203,14 @@
 						<div id="q6" class="q required">
 							<a class="item_anchor" name="ItemAnchor6"></a>
 							<label class="question top_question" for="RESULT_TextField-6">Movie Trailer&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
-							<input type="url" name="RESULT_TextField-6" class="text_field" id="RESULT_TextField-6" placeholder="Enter Movie Trailer Youtube URL"
+							<input type="url" name="trailer" class="text_field" id="RESULT_TextField-6" placeholder="Enter Movie Trailer Youtube URL"
 							 size="100" maxlength="255" value="">
 						</div>
 						<div class="clear"></div>
 					</div>
 					<!-- END_ITEMS -->
 					<div class="outside_container">
-						<div class="buttons_reverse"><input type="submit" name="Submit" value="Submit" class="submit_button" id="FSsubmit"></div>
+						<div class="buttons_reverse"><input type="submit" name="Submit" value="Submit" class="submit_button" id="FSsubmit" onclick="AddMovie()"></div>
 					</div>
 				</form>
 			</div> <!-- .container -->

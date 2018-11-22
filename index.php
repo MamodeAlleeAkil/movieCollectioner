@@ -1,5 +1,5 @@
 <?php
-require "/classes/movie.php";
+
 $USER= "root";
 $PASSWORD ="1234";
 $DSN ="mysql:host=localhost;dbname=movie_collectioner_db";
@@ -8,9 +8,12 @@ try {
 } catch (PDOException $e) {
    die("Error ! : " . $e->getMessage());
 }
-//$pdo->exec("INSERT INTO sample (col) VALUES('val')");
-$result = $pdo->query("SELECT * FROM movie");
-$movies = $result->fetchAll(PDO::FETCH_ASSOC);
+
+$resultMovie = $pdo->query("SELECT * FROM movie");
+$movies = $resultMovie->fetchAll(PDO::FETCH_ASSOC);
+
+$resultCast = $pdo->query("SELECT * FROM cast");
+$casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +71,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
 		<main class="main-content">
 
 			<div class="container">
-			<?php var_dump($movies) ?>
+			
 				<!--Table-->
 				<table id="tablePreview" class="table table-striped table-hover table-bordered">
 					<!--Table head-->
@@ -82,6 +85,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
 							<th>Category</th>
 							<th>Edit</th>
 							<th>Modify </th>
+							<th>View </th>
 						</tr>
 					</thead>
 					<!--Table head-->
@@ -92,74 +96,25 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
 							<th scope="row"><?php echo $movie["movie_id"]; ?></th>
 							<td><img alt="Image not availabe" title=<?php echo $movie["title"]; ?> src=<?php echo $movie["cover"]; ?>></td>
 							<td><?php echo $movie["title"]; ?></td>
-							<td>Dr. Kennebrew Beauregard, Ron Stallworth, Mr. Turrentine, Chief Bridges</td>
-							<td>2018</td>
-							<td>Comedy</td>
+							<td><?php 
+								foreach($casts as $cast){
+									if ( $movie["movie_id"]== $cast["movie_id"]){
+										echo $cast["cast_name"];
+									}
+								}
+								 ?></td>
+							
+							<td><?php echo $movie["year"]; ?></td>
+							<td><?php echo $movie["category_id"]; ?></td>
 							<td><a href="#">Modify</a></td>
 							<td><a href="#">Delete</a></td>
+							<td><a href="#">View</a></td>
 						</tr>
 						<?php endforeach; ?>
-						<!--<tr>
-							<th scope="row">2</th>
-							<td><img alt="The Grinch Poster" title="The Grinch Poster" src="https://m.media-amazon.com/images/M/MV5BYmE5Yjg0MzktYzgzMi00YTFiLWJjYTItY2M5MmI1ODI4MDY3XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>The Grinch</td>
-							<td>The Grinch, Cindy-Lou Who, Donna Who</td>
-							<td>2018</td>
-							<td>Comedy</td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td><img alt="Jurassic World: Fallen Kingdom Poster" title="Jurassic World: Fallen Kingdom Poster" src="https://m.media-amazon.com/images/M/MV5BNzIxMjYwNDEwN15BMl5BanBnXkFtZTgwMzk5MDI3NTM@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>Jurassic World: Fallen Kingdom</td>
-							<td>Owen Grady, Claire Dearing, Eli Mills</td>
-							<td>2018</td>
-							<td>Science Fiction</td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
-						</tr>
-						<tr>
-							<th scope="row">4</th>
-							<td><img alt="A-X-L Poster" title="A-X-L Poster" src="https://m.media-amazon.com/images/M/MV5BMzhmMWY5YzYtNGU0OS00OWExLWE4MTEtZjdmZTczNGEwNjhmXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>A-X-L</td>
-							<td>Sara, Chuck Hill, Mr. Fontaine</td>
-							<td>2018</td>
-							<td>Science Fiction</td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
-						</tr>
-						<tr>
-							<th scope="row">5</th>
-							<td><img alt="The Nun Poster" title="The Nun Poster" src="https://m.media-amazon.com/images/M/MV5BMjEwMDE1NzI3M15BMl5BanBnXkFtZTgwNjg2NjExNjM@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>The Nun</td>
-							<td>Father Burke, Sister Irene, Frenchie, The Nun</td>
-							<td>2018</td>
-							<td>Horror</td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
-						</tr>
-						<tr>
-							<th scope="row">6</th>
-							<td><img alt="The Conjuring Poster" title="The Conjuring Poster" src="https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>The Conjuring</td>
-							<td>Lorraine Warren, Ed Warren, Carolyn Perron</td>
-							<td>2013</td>
-							<td>Horror</td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
-						</tr>
-						<tr>
-							<th scope="row">7</th>
-							<td><img alt="Fifty Shades of Grey Poster" title="Fifty Shades of Grey Poster" src="https://m.media-amazon.com/images/M/MV5BMjE1MTM4NDAzOF5BMl5BanBnXkFtZTgwNTMwNjI0MzE@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>Fifty Shades of Grey</td>
-							<td>Anastasia Steele, Christian Grey</td>
-							<td>2015</td>
-							<td>Romance</td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
-						</tr>
-						-->
+						
+				
+						
+					
 					</tbody>
 					<!--Table body-->
 				</table>
