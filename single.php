@@ -1,3 +1,29 @@
+<?php
+
+$USER= "root";
+$PASSWORD ="1234";
+$DSN ="mysql:host=localhost;dbname=movie_collectioner_db";
+try {
+   $pdo = new PDO($DSN, $USER, $PASSWORD);
+} catch (PDOException $e) {
+   die("Error ! : " . $e->getMessage());
+}
+$movie_id=1;
+if (isset($_GET['movie_id'])) { $movie_id = (int)$_GET['movie_id']; }
+$resultMovie = $pdo->query("SELECT * FROM movie WHERE movie_id=".$movie_id);
+$movies = $resultMovie->fetchAll(PDO::FETCH_ASSOC);
+$movie=$movies[0];
+
+$resultCast = $pdo->query("SELECT * FROM cast");
+$casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
+
+$resultCategory = $pdo->query("SELECT * FROM category");
+$categories = $resultCategory->fetchAll(PDO::FETCH_ASSOC);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -23,82 +49,82 @@
 
 
 	<body>
-		
 
-		<div id="site-content">
-			<header class="site-header">
-				<div class="container">
-					<a href="index.php" id="branding">
-						<img src="images/logo.png" alt="" class="logo">
-						<div class="logo-copy">
-							<h1 class="site-title">Company Name</h1>
-							<small class="site-description">Tagline goes here</small>
-						</div>
-					</a> <!-- #branding -->
 
-					<div class="main-navigation">
-						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-						<ul class="menu">
-							<li class="menu-item"><a href="index.php">Home</a></li>
-							<li class="menu-item"><a href="about.php">About</a></li>
-							<li class="menu-item current-menu-item"><a href="review.php">Movie reviews</a></li>
-							<li class="menu-item"><a href="joinus.php">Join us</a></li>
-							<li class="menu-item"><a href="contact.php">Contact</a></li>
-						</ul> <!-- .menu -->
+	<div id="site-content">
+		<header class="site-header">
+			<div class="container">
+				<a href="index.php" id="branding">
+					<img src="images/logo.png" alt="" class="logo">
+					<div class="logo-copy">
+						<h1 class="site-title">Super Movies</h1>
+						<small class="site-description">One stop Movie collection!</small>
+					</div>
+				</a> <!-- #branding -->
 
-						<form action="#" class="search-form">
-							<input type="text" placeholder="Search...">
-							<button><i class="fa fa-search"></i></button>
-						</form>n><i class="fa fa-search"></i></button>
-						</form>
-					</div> <!-- .main-navigation -->
+				<div class="main-navigation">
+					<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
+					<ul class="menu">
+						<li class="menu-item current-menu-item"><a href="index.php">Home</a></li>
+						<li class="menu-item"><a href="search.php">Search</a></li>
+						<li class="menu-item"><a href="add-movie.php">Add Movie</a></li>
+					</ul> <!-- .menu -->
+				</div> <!-- .main-navigation -->
 
-					<div class="mobile-navigation"></div>
-				</div>
+				<div class="mobile-navigation"></div>
+			</div>
 			</header>
 			<main class="main-content">
 				<div class="container">
 					<div class="page">
-						<div class="breadcrumbs">
-							<a href="index.php">Home</a>
-							<a href="review.php">Movie Review</a>
-							<span>The Croods</span>
-						</div>
+						
 
 						<div class="content">
 							<div class="row">
 								<div class="col-md-6">
-									<figure class="movie-poster"><img src="dummy/single-image.jpg" alt="#"></figure>
+									<figure class="movie-poster"><img src=<?php echo $movie["cover"]; ?> alt="#"></figure>
 								</div>
 								<div class="col-md-6">
-									<h2 class="movie-title">The Croods</h2>
-									<div class="movie-summary">
-										<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. </p>
-
-										<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit sed.</p>
-									</div>
+									<h2 class="movie-title"><?php echo $movie["title"]; ?></h2>
+									
 									<ul class="movie-meta">
-										<li><strong>Rating:</strong> 
-											<div class="star-rating" title="Rated 4.00 out of 5"><span style="width:80%"><strong class="rating">4.00</strong> out of 5</span></div>
-										</li>
-										<li><strong>Length:</strong> 98 min</li>
-										<li><strong>Premiere:</strong> 22 March 2013 (USA)</li>
-										<li><strong>Category:</strong> Animation/Adventure/Comedy</li>
+																			
+										
+										<li><strong>Category:</strong> <?php 
+								foreach($categories as $category){
+									if ( $movie["category_id"]== $category["category_id"]){
+										echo $category["category_name"];
+									}
+								}
+								 ?></li>
 									</ul>
 
 									<ul class="starring">
-										<li><strong>Directors:</strong> Kirk de Mico (as Kirk DeMico). Chris Sanders</li>
-										<li><strong>Writers:</strong> Chris Sanders (screenplay), Kirk De Micco (screenplay)</li>
-										<li><strong>Stars:</strong> Nicolas Cage, Ryan Reynolds, Emma Stone</li>
+										<li><strong>Cast Name:</strong> <?php 
+								foreach($casts as $cast){
+									if ( $movie["movie_id"]== $cast["movie_id"]){
+										echo $cast["cast_name"];
+									}
+								}
+								 ?></li>
+										<li><strong>Actor Name:</strong> <?php 
+								foreach($casts as $cast){
+									if ( $movie["movie_id"]== $cast["movie_id"]){
+										echo $cast["actor_name"];
+									}
+								}
+								 ?></li>
+										<li><strong>Year:</strong> <?php echo $movie["year"]; ?></li>
+										
+									</li>
+										<li><strong>IMBD LINK:</strong> <?php echo $movie["imdb_link"]; ?></li>	
 									</ul>
 								</div>
 							</div> <!-- .row -->
 							<div class="entry-content">
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac pharetra libero. Integer in suscipit diam, sit amet eleifend nunc. Curabitur egestas nunc nulla, in aliquet risus efficitur quis. Vivamus facilisis est libero, vitae iaculis nulla cursus in. Suspendisse potenti. In et fringilla ipsum, quis varius quam. Morbi eleifend venenatis diam finibus vehicula. Suspendisse eu blandit metus. Sed feugiat pellentesque turpis, in lacinia ipsum. Vivamus nec luctus orci.</p>
-								<p>Aenean vehicula eget risus sit amet posuere. Maecenas id risus maximus, malesuada leo eget, pellentesque arcu. Phasellus vitae leo rhoncus, consectetur mauris vitae, lacinia quam. Nunc turpis erat, accumsan eget justo quis, auctor ultricies magna. Mauris sodales, risus sit amet hendrerit tincidunt, erat ante facilisis sapien, sit amet maximus neque massa a felis. Nullam consectetur justo massa, vel commodo metus gravida in. Aliquam erat volutpat. Nullam a lorem sed lorem euismod gravida a eu velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec venenatis ac ligula vel pharetra. Aenean vitae nulla sed dui volutpat euismod. Nam ex quam, consequat id rutrum sed, porttitor id lectus. Vestibulum venenatis consectetur justo ut sagittis. Duis dignissim tincidunt quam, nec pulvinar libero luctus nec. Morbi blandit nec lorem in ullamcorper.</p>
-								<p>Vestibulum et odio massa. Integer at odio ipsum. Proin vitae tristique nibh. Aenean semper ante sit amet ante ultricies tincidunt. Curabitur cursus, urna non ultricies posuere, dolor lacus cursus lorem, a dapibus nibh ex eget sem. Aliquam semper sagittis sapien a fermentum. Nullam sed iaculis lacus, et imperdiet risus. Praesent quis turpis ac nunc sodales tincidunt. Aliquam at leo odio. Sed a tempor nisl, et mattis felis. Nam mauris nunc, commodo ac orci ut, auctor viverra mauris.</p>
-								<p>Quisque nec justo vitae metus consectetur ultrices. Duis venenatis lorem massa, eu pulvinar quam faucibus sed. Nulla fringilla lorem sit amet sagittis mattis. Nunc in leo a odio mollis consectetur. Etiam ac nisl eget diam ullamcorper porta. Aliquam consectetur neque eget metus egestas sollicitudin. Curabitur ultrices urna et feugiat malesuada.</p>
-								<p>Nulla facilisi. Fusce sed dapibus leo, eu lobortis ante. Duis luctus mauris in ante semper, ut feugiat nisi condimentum. Nullam a odio et justo suscipit tempus. Vestibulum placerat dapibus quam, a egestas turpis efficitur id. Integer suscipit placerat placerat. Phasellus in lorem quis leo egestas accumsan. Nam et euismod ligula. Duis nec erat aliquam, sollicitudin diam non, ornare leo. Pellentesque augue leo, faucibus in nunc nec, tincidunt ullamcorper tortor. Phasellus aliquam condimentum elit. Nulla facilisi. Donec magna libero, bibendum eu faucibus et, mattis at felis. Integer turpis nibh, blandit nec elit vel, euismod laoreet quam. Donec vel ante nisi. Nunc luctus a tellus non.</p>
+							<?php
+							echo "<iframe width='560' height='315' src='".$movie['trailer_link']."' frameborder='0' allowfullscreen></iframe>";
+							?>
 							</div>
 						</div>
 					</div>

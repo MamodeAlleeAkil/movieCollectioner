@@ -14,7 +14,11 @@ $movies = $resultMovie->fetchAll(PDO::FETCH_ASSOC);
 
 $resultCast = $pdo->query("SELECT * FROM cast");
 $casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
+
+$resultCategory = $pdo->query("SELECT * FROM category");
+$categories = $resultCategory->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -105,10 +109,16 @@ $casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
 								 ?></td>
 							
 							<td><?php echo $movie["year"]; ?></td>
-							<td><?php echo $movie["category_id"]; ?></td>
+							<td><?php 
+								foreach($categories as $category){
+									if ( $movie["category_id"]== $category["category_id"]){
+										echo $category["category_name"];
+									}
+								}
+								 ?></td>
 							<td><a href="#">Modify</a></td>
 							<td><a href="#">Delete</a></td>
-							<td><a href="#">View</a></td>
+							<td><?php echo "<a href='single.php?movie_id=".$movie["movie_id"]."'>View</a>"?></td>
 						</tr>
 						<?php endforeach; ?>
 						

@@ -8,8 +8,9 @@ try {
 } catch (PDOException $e) {
    die("Error ! : " . $e->getMessage());
 }
-
+if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['AddMovie'])) { AddMovie(); }
 function AddMovie(){
+	global $pdo;
 	$category=$_POST["category"]; 
 	$title=$_POST["title"];
 	$year=$_POST["year"];
@@ -22,8 +23,11 @@ function AddMovie(){
 	$pdo->beginTransaction();
 	try {
 	   $sql1 = "INSERT INTO movie (title, year, imdb_link, trailer_link, cover, category_id) 
-	  VALUES ( ".$title.", ".$year.", ".$url.", ".$trailer.", ".$cover.", ".$category." )";
-	   $pdo->exec($sql);
+	  VALUES ( '".$title."', '".$year."', '".$url."', '".$trailer."', '".$cover."', ".$category." )";
+	 
+	 //$sql2 = "INSERT INTO cast (cast_name) 
+	 //VALUES ( '".$cast_name."' )";
+	   $pdo->exec($sql1);
 	  
 	   $pdo->commit();
 	} catch (Exception $e) {
@@ -210,7 +214,7 @@ function AddMovie(){
 					</div>
 					<!-- END_ITEMS -->
 					<div class="outside_container">
-						<div class="buttons_reverse"><input type="submit" name="Submit" value="Submit" class="submit_button" id="FSsubmit" onclick="AddMovie()"></div>
+						<div class="buttons_reverse"><input type="submit" name="AddMovie" value="Submit" class="submit_button" id="FSsubmit"></div>
 					</div>
 				</form>
 			</div> <!-- .container -->
