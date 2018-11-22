@@ -31,7 +31,7 @@
 	<div id="site-content">
 		<header class="site-header">
 			<div class="container">
-				<a href="index.html" id="branding">
+				<a href="index.php" id="branding">
 					<img src="images/logo.png" alt="" class="logo">
 					<div class="logo-copy">
 						<h1 class="site-title">Super Movies</h1>
@@ -42,9 +42,9 @@
 				<div class="main-navigation">
 					<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
 					<ul class="menu">
-						<li class="menu-item"><a href="index.html">Home</a></li>
-						<li class="menu-item current-menu-item"><a href="search.html">Search</a></li>
-						<li class="menu-item"><a href="add-movie.html">Add Movie</a></li>
+						<li class="menu-item"><a href="index.php">Home</a></li>
+						<li class="menu-item current-menu-item"><a href="search.php">Search</a></li>
+						<li class="menu-item"><a href="add-movie.php">Add Movie</a></li>
 					</ul> <!-- .menu -->
 				</div> <!-- .main-navigation -->
 				<div class="mobile-navigation"></div>

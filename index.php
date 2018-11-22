@@ -1,3 +1,17 @@
+<?php
+require "/classes/movie.php";
+$USER= "root";
+$PASSWORD ="1234";
+$DSN ="mysql:host=localhost;dbname=movie_collectioner_db";
+try {
+   $pdo = new PDO($DSN, $USER, $PASSWORD);
+} catch (PDOException $e) {
+   die("Error ! : " . $e->getMessage());
+}
+//$pdo->exec("INSERT INTO sample (col) VALUES('val')");
+$result = $pdo->query("SELECT * FROM movie");
+$movies = $result->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +45,7 @@
 	<div id="site-content">
 		<header class="site-header">
 			<div class="container">
-				<a href="index.html" id="branding">
+				<a href="index.php" id="branding">
 					<img src="images/logo.png" alt="" class="logo">
 					<div class="logo-copy">
 						<h1 class="site-title">Super Movies</h1>
@@ -42,9 +56,9 @@
 				<div class="main-navigation">
 					<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
 					<ul class="menu">
-						<li class="menu-item current-menu-item"><a href="index.html">Home</a></li>
-						<li class="menu-item"><a href="search.html">Search</a></li>
-						<li class="menu-item"><a href="add-movie.html">Add Movie</a></li>
+						<li class="menu-item current-menu-item"><a href="index.php">Home</a></li>
+						<li class="menu-item"><a href="search.php">Search</a></li>
+						<li class="menu-item"><a href="add-movie.php">Add Movie</a></li>
 					</ul> <!-- .menu -->
 				</div> <!-- .main-navigation -->
 
@@ -52,7 +66,9 @@
 			</div>
 		</header>
 		<main class="main-content">
+
 			<div class="container">
+			<?php var_dump($movies) ?>
 				<!--Table-->
 				<table id="tablePreview" class="table table-striped table-hover table-bordered">
 					<!--Table head-->
@@ -65,23 +81,25 @@
 							<th>Year</th>
 							<th>Category</th>
 							<th>Edit</th>
-							<th>Modify</th>
+							<th>Modify </th>
 						</tr>
 					</thead>
 					<!--Table head-->
 					<!--Table body-->
 					<tbody>
+						<?php foreach($movies as $movie): ?>
 						<tr>
-							<th scope="row">1</th>
-							<td><img alt="BlacKkKlansman Poster" title="BlacKkKlansman Poster" src="https://m.media-amazon.com/images/M/MV5BMjUyOTE1NjI0OF5BMl5BanBnXkFtZTgwMTM4ODQ5NTM@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
-							<td>BlacKkKlansman</td>
-							<td>Dr. Kennebrew Beauregard, Ron Stallworth, Mr. Turrentine, Chief Bridges </td>
+							<th scope="row"><?php echo $movie["movie_id"]; ?></th>
+							<td><img alt="Image not availabe" title=<?php echo $movie["title"]; ?> src=<?php echo $movie["cover"]; ?>></td>
+							<td><?php echo $movie["title"]; ?></td>
+							<td>Dr. Kennebrew Beauregard, Ron Stallworth, Mr. Turrentine, Chief Bridges</td>
 							<td>2018</td>
 							<td>Comedy</td>
 							<td><a href="#">Modify</a></td>
 							<td><a href="#">Delete</a></td>
 						</tr>
-						<tr>
+						<?php endforeach; ?>
+						<!--<tr>
 							<th scope="row">2</th>
 							<td><img alt="The Grinch Poster" title="The Grinch Poster" src="https://m.media-amazon.com/images/M/MV5BYmE5Yjg0MzktYzgzMi00YTFiLWJjYTItY2M5MmI1ODI4MDY3XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX182_CR0,0,182,268_AL_.jpg"></td>
 							<td>The Grinch</td>
@@ -141,6 +159,7 @@
 							<td><a href="#">Modify</a></td>
 							<td><a href="#">Delete</a></td>
 						</tr>
+						-->
 					</tbody>
 					<!--Table body-->
 				</table>

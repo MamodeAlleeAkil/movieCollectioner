@@ -1,7 +1,7 @@
-<? php
+<?php
 
 class category {
-	public $category_id, $category_name
+	public $category_id, $category_name;
 	
 }
 ?>
