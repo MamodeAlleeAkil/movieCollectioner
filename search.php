@@ -123,7 +123,7 @@ $casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
 							<td><?php echo $movie["category_id"]; ?></td>
 							<td><a href="#">Modify</a></td>
 							<td><a href="#">Delete</a></td>
-							<td><a href="#">View</a></td>
+							<td><a href="#"><?php echo "<a href='single.php?movie_id=".$movie["movie_id"]."'>View</a>"?></a></td>
 						</tr>
 
 								

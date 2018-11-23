@@ -88,7 +88,6 @@ $categories = $resultCategory->fetchAll(PDO::FETCH_ASSOC);
 							<th>Year</th>
 							<th>Category</th>
 							<th>Edit</th>
-							<th>Modify </th>
 							<th>View </th>
 						</tr>
 					</thead>
@@ -116,8 +115,8 @@ $categories = $resultCategory->fetchAll(PDO::FETCH_ASSOC);
 									}
 								}
 								 ?></td>
-							<td><a href="#">Modify</a></td>
-							<td><a href="#">Delete</a></td>
+							<td><?php echo "<a href='modify.php?movie_id=".$movie["movie_id"]."'>Modify</a>"?></td>
+							
 							<td><?php echo "<a href='single.php?movie_id=".$movie["movie_id"]."'>View</a>"?></td>
 						</tr>
 						<?php endforeach; ?>

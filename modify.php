@@ -5,13 +5,25 @@ $PASSWORD ="1234";
 $DSN ="mysql:host=localhost;dbname=movie_collectioner_db";
 try {
    $pdo = new PDO($DSN, $USER, $PASSWORD);
-   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
    die("Error ! : " . $e->getMessage());
 }
-if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['AddMovie'])) { AddMovie(); }
-function AddMovie(){
+$movie_id=1;
+if (isset($_GET['movie_id'])) { $movie_id = (int)$_GET['movie_id']; }
+$resultMovie = $pdo->query("SELECT * FROM movie WHERE movie_id=".$movie_id);
+$movies = $resultMovie->fetchAll(PDO::FETCH_ASSOC);
+$movie=$movies[0];
+
+$resultCast = $pdo->query("SELECT * FROM cast");
+$casts = $resultCast->fetchAll(PDO::FETCH_ASSOC);
+
+$resultCategory = $pdo->query("SELECT * FROM category");
+$categories = $resultCategory->fetchAll(PDO::FETCH_ASSOC);
+
+if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['Modify'])) { Modify(); }
+function Modify(){
 	global $pdo;
+	global $movie;
 	$category=$_POST["category"]; 
 	$title=$_POST["title"];
 	$year=$_POST["year"];
@@ -23,14 +35,14 @@ function AddMovie(){
 	
 	$pdo->beginTransaction();
 	try {
-	   $sql1 = "INSERT INTO movie (title, year, imdb_link, trailer_link, cover, category_id) 
-	  VALUES ( '".$title."', '".$year."', '".$url."', '".$trailer."', '".$cover."', ".$category." )";
+	   $sql1 = "UPDATE  movie SET title='".$title."', year='".$year."', imdb_link='".$url."', trailer_link='".$trailer."', cover='".$cover."', category_id=".$category." 
+	  WHERE movie_id=".$movie['movie_id']." ";
 	
 	   $pdo->exec($sql1);
 	 
 	   
-	 $sql2 = "INSERT INTO cast (cast_name, movie_id) 
-	 VALUES ( '".$casts."', ".$pdo->lastInsertId()." )";
+	 $sql2 = "UPDATE  cast SET cast_name='".$casts."'
+	 WHERE movie_id=".$movie['movie_id']." ";
 	 
 	   $pdo->exec($sql2);
 	   $pdo->commit();
@@ -99,7 +111,7 @@ function AddMovie(){
 		</header>
 		<main class="main-content">
 			<div class="container">
-				<h1 class="site-title">Add a Movie</h1>
+				<h1 class="site-title">Modify</h1>
 				<form method="post" id="add-movie-form" class="add-movie-form" >
 
 					<!-- BEGIN_ITEMS -->
@@ -137,7 +149,7 @@ function AddMovie(){
 							<a class="item_anchor" name="ItemAnchor1"></a>
 							<label class="question top_question" for="title">Movie Title&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
 							<input type="text" name="title" class="text_field" id="RESULT_TextField-1" placeholder="Movie Title"
-							 size="40" maxlength="255" value="">
+							 size="40" maxlength="255" value=<?php echo $movie["title"]; ?>>
 						</div>
 
 						<div class="clear"></div>
@@ -187,7 +199,7 @@ function AddMovie(){
 							<a class="item_anchor" name="ItemAnchor4"></a>
 							<label class="question top_question" for="RESULT_TextField-4">Movie Cover&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
 							<input type="url" name="cover" class="text_field" id="RESULT_TextField-4" placeholder="Enter Movie Cover URL"
-							 size="100" maxlength="255" value="">
+							 size="100" maxlength="255" value="<?php echo $movie["cover"]; ?>">
 						</div>
 
 						<div class="clear"></div>
@@ -205,7 +217,7 @@ function AddMovie(){
 							<a class="item_anchor" name="ItemAnchor5"></a>
 							<label class="question top_question" for="RESULT_TextField-5">Movie Url&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
 							<input type="url" name="url" class="text_field" id="RESULT_TextField-5" placeholder="Enter Movie URL"
-							 size="100" maxlength="255" value="">
+							 size="100" maxlength="255" value="<?php echo $movie["imdb_link"]; ?>">
 						</div>
 
 						<div class="clear"></div>
@@ -214,13 +226,13 @@ function AddMovie(){
 							<a class="item_anchor" name="ItemAnchor6"></a>
 							<label class="question top_question" for="RESULT_TextField-6">Movie Trailer&nbsp;<b class="icon_required" style="color:#FF0000">*</b></label>
 							<input type="url" name="trailer" class="text_field" id="RESULT_TextField-6" placeholder="Enter Movie Trailer Youtube URL"
-							 size="100" maxlength="255" value="">
+							 size="100" maxlength="255" value="<?php echo $movie["trailer_link"]; ?>">
 						</div>
 						<div class="clear"></div>
 					</div>
 					<!-- END_ITEMS -->
 					<div class="outside_container">
-						<div class="buttons_reverse"><input type="submit" name="AddMovie" value="Submit" class="submit_button" id="FSsubmit"></div>
+						<div class="buttons_reverse"><input type="submit" name="Modify" value="Submit" class="submit_button" id="FSsubmit"></div>
 					</div>
 				</form>
 			</div> <!-- .container -->
